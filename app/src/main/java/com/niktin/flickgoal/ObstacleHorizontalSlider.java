@@ -14,7 +14,7 @@ public class ObstacleHorizontalSlider implements GameObject {
     private int width = Constants.SCREEN_WIDTH / 4;
     private int height = Constants.SCREEN_WIDTH / 16;
     private int direction = 1;
-    private int speed = 4;
+    private int speed = 10;
     private int colour;
     private Point startingPoint;
 

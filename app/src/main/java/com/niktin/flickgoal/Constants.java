@@ -11,7 +11,10 @@ class Constants {
     static int SCREEN_WIDTH;
     static int SCREEN_HEIGHT;
 
-    static final int MAX_FPS = 30;
+    static final int MAX_FPS = 60;
+
+    static float SURFACE_FRICTION_COEFFICIENT = (float) 0.95;
+    static float BALL_NORMALISED_SPEED = 100;
 
     @SuppressLint("StaticFieldLeak")
     static Context CURRENT_CONTEXT;
