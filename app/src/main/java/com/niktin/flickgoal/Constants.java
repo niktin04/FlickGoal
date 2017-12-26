@@ -13,7 +13,8 @@ class Constants {
 
     static final int MAX_FPS = 60;
 
-    static float SURFACE_FRICTION_COEFFICIENT = (float) 0.95;
+    static float SURFACE_FRICTION_COEFFICIENT = (float) 0.97;
+    static float WALL_DAMPING_COEFFICIENT = (float) 0.4;
     static float BALL_NORMALISED_SPEED = 100;
 
     @SuppressLint("StaticFieldLeak")

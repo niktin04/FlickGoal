@@ -26,13 +26,13 @@ public class BallObject implements GameObject {
     public void update() {
         // Updating speed based on friction.
         if ((centerX + speedX - ballRadius) < 0 || (centerX + speedX + ballRadius) > Constants.SCREEN_WIDTH) {
-            speedX *= -1 * Constants.SURFACE_FRICTION_COEFFICIENT;
+            speedX *= -1 * Constants.WALL_DAMPING_COEFFICIENT;
         } else {
             speedX *= Constants.SURFACE_FRICTION_COEFFICIENT;
         }
 
         if ((centerY + speedY - ballRadius) < 0 || (centerY + speedY + ballRadius) > Constants.SCREEN_HEIGHT) {
-            speedY *= -1 * Constants.SURFACE_FRICTION_COEFFICIENT;
+            speedY *= -1 * Constants.WALL_DAMPING_COEFFICIENT;
         } else {
             speedY *= Constants.SURFACE_FRICTION_COEFFICIENT;
         }
@@ -57,8 +57,24 @@ public class BallObject implements GameObject {
         canvas.drawCircle(centerX, centerY, ballRadius, paint);
     }
 
-    public void setBallSpeed(float speedX, float speedY) {
-        this.speedX = speedX;
-        this.speedY = speedY;
+    void setBallSpeed(float speedX, float speedY) {
+        this.speedX += speedX;
+        this.speedY += speedY;
+    }
+
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public float getSpeedY() {
+        return speedY;
+    }
+
+    public float getBallRadius() {
+        return ballRadius;
     }
 }

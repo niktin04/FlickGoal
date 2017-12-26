@@ -3,6 +3,7 @@ package com.niktin.flickgoal;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Build;
 
 /**
@@ -14,21 +15,22 @@ public class ObstacleHorizontalSlider implements GameObject {
     private int width = Constants.SCREEN_WIDTH / 4;
     private int height = Constants.SCREEN_WIDTH / 16;
     private int direction = 1;
-    private int speed = 10;
+    private int speed = 7;
     private int colour;
-    private Point startingPoint;
+    private Point centerPoint;
+    private float obstacleVerticalBoostVelocity = 10;
 
-    ObstacleHorizontalSlider(int colour, Point startingPoint) {
+    ObstacleHorizontalSlider(int colour, Point centerPoint) {
         this.colour = colour;
-        this.startingPoint = startingPoint;
+        this.centerPoint = centerPoint;
     }
 
     @Override
     public void update() {
-        if (startingPoint.x < Constants.SCREEN_WIDTH / 8 || startingPoint.x > Constants.SCREEN_WIDTH * 7 / 8) {
+        if (centerPoint.x < Constants.SCREEN_WIDTH / 8 || centerPoint.x > Constants.SCREEN_WIDTH * 7 / 8) {
             direction *= -1;
         }
-        startingPoint.offset(speed * direction, 0);
+        centerPoint.offset(speed * direction, 0);
     }
 
     @Override
@@ -36,10 +38,25 @@ public class ObstacleHorizontalSlider implements GameObject {
         Paint paint = new Paint();
         paint.setColor(colour);
 
+        RectF rectangle = new RectF(centerPoint.x - width / 2, centerPoint.y - height / 2, centerPoint.x + width / 2, centerPoint.y + height / 2);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            canvas.drawRoundRect(startingPoint.x - width/2, startingPoint.y - height/2, startingPoint.x + width/2, startingPoint.y + height/2, height / 2, height / 2, paint);
+            canvas.drawRoundRect(rectangle, height / 2, height / 2, paint);
         } else {
-            canvas.drawRect(startingPoint.x - width/2, startingPoint.y - height/2, startingPoint.x + width/2, startingPoint.y + height/2, paint);
+            canvas.drawRect(rectangle, paint);
+        }
+    }
+
+    void ballCollide(BallObject ballObject) {
+        float ballRadius = ballObject.getBallRadius();
+        RectF boundaryRectangle = new RectF(centerPoint.x - (width / 2) - ballRadius, centerPoint.y - (height / 2) - ballRadius, centerPoint.x + (width / 2) + ballRadius, centerPoint.y + (height / 2) + ballRadius);
+        if (boundaryRectangle.contains(ballObject.getCenterX(), ballObject.getCenterY())) {
+            ballObject.setBallSpeed(speed * direction * Constants.WALL_DAMPING_COEFFICIENT, 0);
+            if (ballObject.getCenterY() > centerPoint.y)
+                ballObject.setBallSpeed(0, (-1 * ballObject.getSpeedY() - ballObject.getSpeedY() * Constants.WALL_DAMPING_COEFFICIENT + obstacleVerticalBoostVelocity));
+            else {
+                ballObject.setBallSpeed(0, (-1 * ballObject.getSpeedY() - ballObject.getSpeedY() * Constants.WALL_DAMPING_COEFFICIENT - obstacleVerticalBoostVelocity));
+            }
         }
     }
 }

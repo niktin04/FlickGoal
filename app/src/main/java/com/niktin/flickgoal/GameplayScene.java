@@ -56,6 +56,8 @@ public class GameplayScene implements Scene {
         ballObject.update();
         obstacleHorizontalSliderOne.update();
         obstacleHorizontalSliderTwo.update();
+        obstacleHorizontalSliderOne.ballCollide(ballObject);
+        obstacleHorizontalSliderTwo.ballCollide(ballObject);
     }
 
     @Override
