@@ -1,6 +1,7 @@
 package com.niktin.flickgoal;
 
 import android.graphics.Canvas;
+import android.media.SoundPool;
 import android.view.MotionEvent;
 
 /**
@@ -9,6 +10,7 @@ import android.view.MotionEvent;
 
 public interface Scene {
     public void receiveTouch(MotionEvent event);
+    public void receiveSoundPool(SoundPool soundPool);
     public void update();
     public void draw(Canvas canvas);
     public void terminate();

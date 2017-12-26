@@ -1,6 +1,7 @@
 package com.niktin.flickgoal;
 
 import android.graphics.Canvas;
+import android.media.SoundPool;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ class SceneManager {
     SceneManager() {
         ACTIVE_SCENE = 0;
         scenes.add(new GameplayScene());
+    }
+
+    void receiveSoundPool(SoundPool soundPool) {
+        scenes.get(ACTIVE_SCENE).receiveSoundPool(soundPool);
     }
 
     void receiveTouch(MotionEvent event) {

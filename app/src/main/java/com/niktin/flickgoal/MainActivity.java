@@ -1,6 +1,7 @@
 package com.niktin.flickgoal;
 
 import android.app.Activity;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Window;
@@ -26,6 +27,9 @@ public class MainActivity extends Activity {
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
         Constants.CURRENT_CONTEXT = this;
+
+        //Allowing music control from volume buttons.
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         //Setting GamePanel class as my view.
         gamePanel = new GamePanel(this);

@@ -2,6 +2,9 @@ package com.niktin.flickgoal;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,12 +17,28 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread mainThread;
     private SceneManager sceneManager;
+    private SoundPool soundPool;
 
     public GamePanel(Context context) {
         super(context);
         getHolder().addCallback(this);
         mainThread = new MainThread(getHolder(), this);
         sceneManager = new SceneManager();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes attrs = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(10)
+                    .setAudioAttributes(attrs)
+                    .build();
+        } else {
+            soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        sceneManager.receiveSoundPool(soundPool);
         setFocusable(true);
     }
 
@@ -55,6 +74,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
 
+    public SoundPool getSoundPool() {
+        return soundPool;
+    }
 
     public void update() {
         sceneManager.update();

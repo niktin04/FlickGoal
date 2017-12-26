@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.media.SoundPool;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.MotionEvent;
 
@@ -20,6 +21,9 @@ public class GameplayScene implements Scene {
 
     private ObstacleHorizontalSlider obstacleHorizontalSliderOne, obstacleHorizontalSliderTwo;
     private Point obstaclePointOne, obstaclePointTwo;
+
+    private SoundPool soundPool;
+    private int soundIds[] = new int[10];
 
     public GameplayScene() {
         ballPoint = new Point(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 7 * 6);
@@ -42,6 +46,7 @@ public class GameplayScene implements Scene {
         this.mDetector.onTouchEvent(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                playBallKicked();
             case MotionEvent.ACTION_MOVE:
 //                kickHitPoint.set((int) event.getX(), (int) event.getY());
 //                distanceBetweenPoints = Math.sqrt((kickHitPoint.x - ballPoint.x) ^ 2 - (kickHitPoint.y - ballPoint.y) ^ 2);
@@ -49,6 +54,12 @@ public class GameplayScene implements Scene {
 //                }
             default:
         }
+    }
+
+    @Override
+    public void receiveSoundPool(SoundPool soundPool) {
+        this.soundPool = soundPool;
+        soundIds[0] = this.soundPool.load(Constants.CURRENT_CONTEXT, R.raw.kick, 1);
     }
 
     @Override
@@ -82,5 +93,9 @@ public class GameplayScene implements Scene {
     @Override
     public void terminate() {
         SceneManager.ACTIVE_SCENE = 0;
+    }
+
+    public void playBallKicked() {
+        soundPool.play(soundIds[0], 1, 1, 1, 0, 1);
     }
 }

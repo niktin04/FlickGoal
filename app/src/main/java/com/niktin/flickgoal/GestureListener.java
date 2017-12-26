@@ -1,5 +1,6 @@
 package com.niktin.flickgoal;
 
+import android.media.SoundPool;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -28,6 +29,7 @@ class GestureListener extends GestureDetector.SimpleOnGestureListener {
                            float velocityX, float velocityY) {
         float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
         float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
+
 
         ballObject.setBallSpeed(normalisedVelocityX, normalisedVelocityY);
         return true;
