@@ -1,5 +1,6 @@
 package com.niktin.flickgoal;
 
+import android.graphics.RectF;
 import android.media.SoundPool;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -25,13 +26,18 @@ class GestureListener extends GestureDetector.SimpleOnGestureListener {
     public boolean onDown(MotionEvent event) {
         return true;
     }
-
     @Override
     public boolean onFling(MotionEvent eventDown, MotionEvent eventUp,
                            float velocityX, float velocityY) {
+
         float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
         float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
 
+        RectF ballRectangle = new RectF(
+                ballObject.getCenterX() - ballObject.getBallRadius(),
+                ballObject.getCenterY() - ballObject.getBallRadius(),
+                ballObject.getCenterX() + ballObject.getBallRadius(),
+                ballObject.getCenterY() + ballObject.getBallRadius());
 
         ballObject.setBallSpeed(normalisedVelocityX, normalisedVelocityY);
         swipeTrailObject.clearTrailPoints();

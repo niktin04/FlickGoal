@@ -7,16 +7,14 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.media.SoundPool;
 import android.support.v4.view.GestureDetectorCompat;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 
 /**
  * Created by NikTin on 26/12/17 at 00:49.
  */
 
 public class GameplayScene implements Scene {
-
-    private GestureDetectorCompat mDetector;
 
     private BallObject ballObject;
     private Point ballPoint;
@@ -25,6 +23,7 @@ public class GameplayScene implements Scene {
     private Point obstaclePointOne, obstaclePointTwo;
 
     private SwipeTrailObject swipeTrailObject;
+    private float maxFlingVelocity = ViewConfiguration.get(Constants.CURRENT_CONTEXT).getScaledMaximumFlingVelocity();
 
     private SoundPool soundPool;
     private int soundIds[] = new int[10];
@@ -40,31 +39,28 @@ public class GameplayScene implements Scene {
         obstacleHorizontalSliderTwo = new ObstacleHorizontalSlider(Color.BLUE, obstaclePointTwo);
 
         swipeTrailObject = new SwipeTrailObject();
-        mDetector = new GestureDetectorCompat(Constants.CURRENT_CONTEXT, new GestureListener(ballObject, swipeTrailObject));
     }
 
     @Override
     public void receiveTouch(MotionEvent event) {
         swipeTrailObject.touchEvents(event);
-        long touchDownTime = System.currentTimeMillis(), ballIntersectTime;
-        int allowedFlingLimitTime = 700;
-        this.mDetector.onTouchEvent(event);
+    }
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                RectF ballRectangle = new RectF(
-                        ballObject.getCenterX() - ballObject.getBallRadius(),
-                        ballObject.getCenterY() - ballObject.getBallRadius(),
-                        ballObject.getCenterX() + ballObject.getBallRadius(),
-                        ballObject.getCenterY() + ballObject.getBallRadius());
-                if (ballRectangle.contains(event.getX(), event.getY())) {
-                    ballIntersectTime = System.currentTimeMillis();
-                    if ((ballIntersectTime - touchDownTime) < allowedFlingLimitTime) {
-                        playBallKicked();
-                        break;
-                    }
-                }
+    @Override
+    public void receiveFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+        RectF ballRectangle = new RectF(
+                ballObject.getCenterX() - ballObject.getBallRadius(),
+                ballObject.getCenterY() - ballObject.getBallRadius(),
+                ballObject.getCenterX() + ballObject.getBallRadius(),
+                ballObject.getCenterY() + ballObject.getBallRadius());
+        ballRectangle.inset(-90,-90);
+        if (ballRectangle.contains(event2.getX(), event2.getY())) {
+            playBallKickedSound();
+            float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
+            float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
+            ballObject.setBallSpeed(normalisedVelocityX, normalisedVelocityY);
         }
+        swipeTrailObject.clearTrailPoints();
     }
 
     @Override
@@ -107,7 +103,7 @@ public class GameplayScene implements Scene {
         SceneManager.ACTIVE_SCENE = 0;
     }
 
-    public void playBallKicked() {
+    public void playBallKickedSound() {
         soundPool.play(soundIds[0], 1, 1, 1, 0, 1);
     }
 }

@@ -19,6 +19,10 @@ class SceneManager {
         scenes.add(new GameplayScene());
     }
 
+    void receiveFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+        scenes.get(ACTIVE_SCENE).receiveFling(event1, event2, velocityX, velocityY);
+    }
+
     void receiveSoundPool(SoundPool soundPool) {
         scenes.get(ACTIVE_SCENE).receiveSoundPool(soundPool);
     }

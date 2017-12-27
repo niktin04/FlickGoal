@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 
 public interface Scene {
     public void receiveTouch(MotionEvent event);
+    public void receiveFling(MotionEvent event1, MotionEvent event2,
+                             float velocityX, float velocityY);
     public void receiveSoundPool(SoundPool soundPool);
     public void update();
     public void draw(Canvas canvas);

@@ -5,7 +5,8 @@ import android.graphics.Canvas;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.util.AttributeSet;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,11 +20,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread mainThread;
     private SceneManager sceneManager;
     private SoundPool soundPool;
+    private GestureDetectorCompat mDetector;
 
     public GamePanel(Context context) {
         super(context);
         getHolder().addCallback(this);
         mainThread = new MainThread(getHolder(), this);
+        mDetector = new GestureDetectorCompat(Constants.CURRENT_CONTEXT, new MyGestureListener());
         sceneManager = new SceneManager();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -38,7 +41,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
         }
-
         sceneManager.receiveSoundPool(soundPool);
         setFocusable(true);
     }
@@ -71,12 +73,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        mDetector.onTouchEvent(event);
         sceneManager.receiveTouch(event);
         return true;
     }
 
-    public SoundPool getSoundPool() {
-        return soundPool;
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2,
+                               float velocityX, float velocityY) {
+            System.out.println("Received Fling: " + event2);
+            sceneManager.receiveFling(event1, event2, velocityX, velocityY);
+            return true;
+        }
     }
 
     public void update() {
