@@ -14,9 +14,11 @@ class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
     private BallObject ballObject;
     private float maxFlingVelocity = ViewConfiguration.get(Constants.CURRENT_CONTEXT).getScaledMaximumFlingVelocity();
+    private SwipeTrailObject swipeTrailObject;
 
-    GestureListener(BallObject ballObject) {
+    GestureListener(BallObject ballObject, SwipeTrailObject swipeTrailObject) {
         this.ballObject = ballObject;
+        this.swipeTrailObject = swipeTrailObject;
     }
 
     @Override
@@ -32,6 +34,7 @@ class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
 
         ballObject.setBallSpeed(normalisedVelocityX, normalisedVelocityY);
+        swipeTrailObject.clearTrailPoints();
         return true;
     }
 }

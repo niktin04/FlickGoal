@@ -4,8 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.media.SoundPool;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
@@ -22,6 +24,8 @@ public class GameplayScene implements Scene {
     private ObstacleHorizontalSlider obstacleHorizontalSliderOne, obstacleHorizontalSliderTwo;
     private Point obstaclePointOne, obstaclePointTwo;
 
+    private SwipeTrailObject swipeTrailObject;
+
     private SoundPool soundPool;
     private int soundIds[] = new int[10];
 
@@ -35,24 +39,31 @@ public class GameplayScene implements Scene {
         obstaclePointTwo = new Point(Constants.SCREEN_WIDTH / 4 * 3, Constants.SCREEN_HEIGHT / 7 * 3);
         obstacleHorizontalSliderTwo = new ObstacleHorizontalSlider(Color.BLUE, obstaclePointTwo);
 
-        mDetector = new GestureDetectorCompat(Constants.CURRENT_CONTEXT, new GestureListener(ballObject));
+        swipeTrailObject = new SwipeTrailObject();
+        mDetector = new GestureDetectorCompat(Constants.CURRENT_CONTEXT, new GestureListener(ballObject, swipeTrailObject));
     }
 
     @Override
     public void receiveTouch(MotionEvent event) {
-        Point kickHitPoint = new Point();
-        double distanceBetweenPoints;
-
+        swipeTrailObject.touchEvents(event);
+        long touchDownTime = System.currentTimeMillis(), ballIntersectTime;
+        int allowedFlingLimitTime = 700;
         this.mDetector.onTouchEvent(event);
+
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                playBallKicked();
             case MotionEvent.ACTION_MOVE:
-//                kickHitPoint.set((int) event.getX(), (int) event.getY());
-//                distanceBetweenPoints = Math.sqrt((kickHitPoint.x - ballPoint.x) ^ 2 - (kickHitPoint.y - ballPoint.y) ^ 2);
-//                if (distanceBetweenPoints < Constants.SCREEN_WIDTH / 16) {
-//                }
-            default:
+                RectF ballRectangle = new RectF(
+                        ballObject.getCenterX() - ballObject.getBallRadius(),
+                        ballObject.getCenterY() - ballObject.getBallRadius(),
+                        ballObject.getCenterX() + ballObject.getBallRadius(),
+                        ballObject.getCenterY() + ballObject.getBallRadius());
+                if (ballRectangle.contains(event.getX(), event.getY())) {
+                    ballIntersectTime = System.currentTimeMillis();
+                    if ((ballIntersectTime - touchDownTime) < allowedFlingLimitTime) {
+                        playBallKicked();
+                        break;
+                    }
+                }
         }
     }
 
@@ -88,6 +99,7 @@ public class GameplayScene implements Scene {
         ballObject.draw(canvas);
         obstacleHorizontalSliderOne.draw(canvas);
         obstacleHorizontalSliderTwo.draw(canvas);
+        swipeTrailObject.draw(canvas);
     }
 
     @Override

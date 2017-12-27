@@ -3,6 +3,7 @@ package com.niktin.flickgoal;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
