@@ -16,7 +16,7 @@ class SceneManager {
 
     SceneManager() {
         ACTIVE_SCENE = 0;
-        scenes.add(new GameplayScene());
+        scenes.add(new PlaygameScene());
     }
 
     void receiveFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
