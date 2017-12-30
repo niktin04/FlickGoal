@@ -22,6 +22,7 @@ public class HorizontalSliderObject implements GameObject {
     private RectF boundaryRectangle, solidRectangle, boundaryArcLeft, boundaryArcRight;
     private int speed = 4;
     private int direction = 1;
+    private Paint solidRectanglePaint, boundaryRectanglePaint, backgroundSlashPaint;
 
     public HorizontalSliderObject(int sliderY, int sliderSpanStartX, int sliderSpanFinishX, int rectangleCenterX) {
         this.sliderY = sliderY;
@@ -30,6 +31,18 @@ public class HorizontalSliderObject implements GameObject {
 
         boundaryRectanglePoint = new Point(rectangleCenterX, sliderY);
         solidRectanglePoint = new Point(rectangleCenterX, sliderY);
+
+        solidRectanglePaint = new Paint();
+        solidRectanglePaint.setAntiAlias(true);
+        solidRectanglePaint.setColor(NikTinHelperFunctions.getRandomColor());
+
+        boundaryRectanglePaint = new Paint();
+        boundaryRectanglePaint.setAntiAlias(true);
+        boundaryRectanglePaint.setStyle(Paint.Style.STROKE);
+        boundaryRectanglePaint.setStrokeWidth(6);
+
+        backgroundSlashPaint = new Paint();
+        backgroundSlashPaint.setAlpha(40);
 
         boundaryRectangle = new RectF(
                 boundaryRectanglePoint.x - width / 2,
@@ -66,15 +79,6 @@ public class HorizontalSliderObject implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        Paint solidRectanglePaint = new Paint();
-        solidRectanglePaint.setAntiAlias(true);
-        solidRectanglePaint.setColor(Color.rgb(254, 167, 87));
-
-        Paint boundaryRectanglePaint = new Paint();
-        boundaryRectanglePaint.setAntiAlias(true);
-        boundaryRectanglePaint.setStyle(Paint.Style.STROKE);
-        boundaryRectanglePaint.setStrokeWidth(6);
-
         generateBackgroundSlashes(canvas);
         canvas.drawRoundRect(solidRectangle, height / 2, height / 2, solidRectanglePaint);
         canvas.drawRoundRect(boundaryRectangle, height / 2, height / 2, boundaryRectanglePaint);
@@ -83,15 +87,11 @@ public class HorizontalSliderObject implements GameObject {
     }
 
     private void generateBackgroundSlashes(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setAlpha(40);
-
         int currentPosition = sliderSpanStartX;
         int objectSquareDimension = 24;
         Bitmap bitmap = NikTinHelperFunctions.getBitmapFromVectorDrawable(R.drawable.ic_slash, Color.BLACK, objectSquareDimension, objectSquareDimension);
-
         while (currentPosition < sliderSpanFinishX - 7) {
-            canvas.drawBitmap(bitmap, currentPosition, sliderY - objectSquareDimension / 2, paint);
+            canvas.drawBitmap(bitmap, currentPosition, sliderY - objectSquareDimension / 2, backgroundSlashPaint);
             currentPosition += objectSquareDimension - 7;
         }
     }

@@ -17,7 +17,8 @@ public class PlaygameScene implements Scene {
     private static int HEIGHT_SEGMENTS = 8;
     private double[] positionX, positionY, isVisibleSelector;
     private Bitmap[] bitmaps;
-    private HorizontalSliderObject horizontalSliderObject;
+    private HorizontalSliderObject sliderOne, sliderTwo, sliderThree;
+    private StrikerObject ball;
 
     PlaygameScene() {
         positionX = new double[WIDTH_SEGMENTS * HEIGHT_SEGMENTS];
@@ -29,10 +30,13 @@ public class PlaygameScene implements Scene {
             positionX[i] = Math.random();
             positionY[i] = Math.random();
             isVisibleSelector[i] = Math.random();
-            bitmaps[i] = NikTinHelperFunctions.getBitmapFromVectorDrawable(setBackgroundObjectType(Math.random()), setBackgroundObjectColor(Math.random()), 16, 16);
+            bitmaps[i] = NikTinHelperFunctions.getBitmapFromVectorDrawable(NikTinHelperFunctions.getRandomBackgroundParticle(), NikTinHelperFunctions.getRandomColor(), 16, 16);
         }
 
-        horizontalSliderObject = new HorizontalSliderObject(400, 400, 900, 700);
+        sliderOne = new HorizontalSliderObject(400, 400, 900, 700);
+        sliderTwo = new HorizontalSliderObject(700, 40, 470, 280);
+        sliderThree = new HorizontalSliderObject(900, 90, 990, 400);
+        ball = new StrikerObject(Constants.SCREEN_WIDTH / 2, 1700);
     }
 
     @Override
@@ -52,14 +56,20 @@ public class PlaygameScene implements Scene {
 
     @Override
     public void update() {
-        horizontalSliderObject.update();
+        sliderOne.update();
+        sliderTwo.update();
+        sliderThree.update();
+        ball.update();
     }
 
     @Override
     public void draw(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
         generateBackground(canvas);
-        horizontalSliderObject.draw(canvas);
+        sliderOne.draw(canvas);
+        sliderTwo.draw(canvas);
+        sliderThree.draw(canvas);
+        ball.draw(canvas);
     }
 
     @Override
@@ -80,30 +90,6 @@ public class PlaygameScene implements Scene {
                             blockHeight * i + (int) (blockHeight * positionY[4 * i + j]), paint);
                 }
             }
-        }
-    }
-
-    private int setBackgroundObjectColor(double randomNumber) {
-        if (randomNumber < 0.25) {
-            return Color.rgb(254, 167, 87);
-        } else if (randomNumber < 0.50) {
-            return Color.rgb(241, 91, 92);
-        } else if (randomNumber < 0.75) {
-            return Color.rgb(127, 216, 212);
-        } else {
-            return Color.rgb(170, 170, 170);
-        }
-    }
-
-    private int setBackgroundObjectType(double randomNumber) {
-        if (randomNumber < 0.25) {
-            return R.drawable.ic_cross;
-        } else if (randomNumber < 0.50) {
-            return R.drawable.ic_circle;
-        } else if (randomNumber < 0.75) {
-            return R.drawable.ic_triangle;
-        } else {
-            return R.drawable.ic_square;
         }
     }
 }

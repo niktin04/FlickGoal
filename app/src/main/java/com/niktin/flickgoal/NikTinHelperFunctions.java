@@ -3,6 +3,7 @@ package com.niktin.flickgoal;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -32,5 +33,33 @@ class NikTinHelperFunctions {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+
+
+    static int getRandomColor() {
+        double randomNumber = Math.random();
+        if (randomNumber < 0.25) {
+            return Color.rgb(254, 167, 87);
+        } else if (randomNumber < 0.50) {
+            return Color.rgb(241, 91, 92);
+        } else if (randomNumber < 0.75) {
+            return Color.rgb(127, 216, 212);
+        } else {
+            return Color.rgb(170, 170, 170);
+        }
+    }
+
+    static int getRandomBackgroundParticle() {
+        double randomNumber = Math.random();
+        if (randomNumber < 0.25) {
+            return R.drawable.ic_cross;
+        } else if (randomNumber < 0.50) {
+            return R.drawable.ic_circle;
+        } else if (randomNumber < 0.75) {
+            return R.drawable.ic_triangle;
+        } else {
+            return R.drawable.ic_square;
+        }
     }
 }
