@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -25,9 +26,10 @@ public class MainActivity extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         //Saving constants for further use.
+        Constants.CURRENT_CONTEXT = this;
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
-        Constants.CURRENT_CONTEXT = this;
+        Constants.MAX_FLING_VELOCITY = ViewConfiguration.get(this).getScaledMaximumFlingVelocity();
 
         //Allowing music control from volume buttons.
         setVolumeControlStream(AudioManager.STREAM_MUSIC);

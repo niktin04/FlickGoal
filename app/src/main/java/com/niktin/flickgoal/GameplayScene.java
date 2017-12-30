@@ -56,8 +56,8 @@ public class GameplayScene implements Scene {
         ballRectangle.inset(-90,-90);
         if (ballRectangle.contains(event2.getX(), event2.getY())) {
             playBallKickedSound();
-            float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
-            float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
+            float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.NORMALISED_VELOCITY;
+            float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.NORMALISED_VELOCITY;
             ballObject.setBallSpeed(normalisedVelocityX, normalisedVelocityY);
         }
         swipeTrailObject.clearTrailPoints();

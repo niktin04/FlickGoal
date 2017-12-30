@@ -46,7 +46,10 @@ public class PlaygameScene implements Scene {
 
     @Override
     public void receiveFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+        int normalisedVelocityX = (int) (velocityX / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY);
+        int normalisedVelocityY = (int) (velocityY / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY);
 
+        ball.setSpeed(normalisedVelocityX, normalisedVelocityY);
     }
 
     @Override
@@ -59,6 +62,11 @@ public class PlaygameScene implements Scene {
         sliderOne.update();
         sliderTwo.update();
         sliderThree.update();
+
+        sliderOne.offsetSolidRectangle(ball.getPositionPoint());
+        sliderTwo.offsetSolidRectangle(ball.getPositionPoint());
+        sliderThree.offsetSolidRectangle(ball.getPositionPoint());
+
         ball.update();
     }
 

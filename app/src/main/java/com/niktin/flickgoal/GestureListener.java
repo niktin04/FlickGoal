@@ -30,8 +30,8 @@ class GestureListener extends GestureDetector.SimpleOnGestureListener {
     public boolean onFling(MotionEvent eventDown, MotionEvent eventUp,
                            float velocityX, float velocityY) {
 
-        float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
-        float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.BALL_NORMALISED_SPEED;
+        float normalisedVelocityX = velocityX / maxFlingVelocity * Constants.NORMALISED_VELOCITY;
+        float normalisedVelocityY = velocityY / maxFlingVelocity * Constants.NORMALISED_VELOCITY;
 
         RectF ballRectangle = new RectF(
                 ballObject.getCenterX() - ballObject.getBallRadius(),
