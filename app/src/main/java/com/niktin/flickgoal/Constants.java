@@ -20,7 +20,7 @@ class Constants {
     static float SURFACE_FRICTION_COEFFICIENT = (float) 0.97;
     static float WALL_DAMPING_COEFFICIENT = (float) 0.4;
 
-    static float NORMALISED_VELOCITY = 100;
+    static float NORMALISED_VELOCITY = 160;
     static float MAX_FLING_VELOCITY;
 
     static boolean GAME_OVER = false;
