@@ -22,7 +22,8 @@ public class HorizontalSliderObject implements GameObject {
     private RectF boundaryRectangle, solidRectangle, boundaryArcLeft, boundaryArcRight;
     private int speed = 4;
     private Paint solidRectanglePaint, boundaryRectanglePaint, backgroundSlashPaint;
-    private float offsetDistanceX, offsetDistanceY, maxSolidOffset = 9;
+    private float offsetDistanceX, offsetDistanceY, maxSolidOffset = 11;
+    private boolean showSolidRectangle = true;
 
     HorizontalSliderObject(int sliderY, int sliderSpanStartX, int sliderSpanFinishX, int rectangleCenterX) {
         this.sliderY = sliderY;
@@ -60,22 +61,24 @@ public class HorizontalSliderObject implements GameObject {
         generateBackgroundSlashes(canvas);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            canvas.drawRoundRect(solidRectanglePoint.x - width / 2 + offsetDistanceX,
-                    solidRectanglePoint.y - height / 2 + offsetDistanceY,
-                    solidRectanglePoint.x + width / 2 + offsetDistanceX,
-                    solidRectanglePoint.y + height / 2 + offsetDistanceY, height / 2, height / 2, solidRectanglePaint);
+            if (showSolidRectangle) {
+                canvas.drawRoundRect(solidRectanglePoint.x - width / 2 + offsetDistanceX,
+                        solidRectanglePoint.y - height / 2 + offsetDistanceY,
+                        solidRectanglePoint.x + width / 2 + offsetDistanceX,
+                        solidRectanglePoint.y + height / 2 + offsetDistanceY, height / 2, height / 2, solidRectanglePaint);
+                canvas.drawArc(boundaryRectanglePoint.x - width / 2 + arcIntermediateDistance,
+                        boundaryRectanglePoint.y - height / 2 + arcIntermediateDistance,
+                        boundaryRectanglePoint.x - width / 2 + height - arcIntermediateDistance,
+                        boundaryRectanglePoint.y + height / 2 - arcIntermediateDistance, 180, 90, false, boundaryRectanglePaint);
+                canvas.drawArc(boundaryRectanglePoint.x + width / 2 - height + arcIntermediateDistance,
+                        boundaryRectanglePoint.y - height / 2 + arcIntermediateDistance,
+                        boundaryRectanglePoint.x + width / 2 - arcIntermediateDistance,
+                        boundaryRectanglePoint.y + height / 2 - arcIntermediateDistance, 0, 90, false, boundaryRectanglePaint);
+            }
             canvas.drawRoundRect(boundaryRectanglePoint.x - width / 2,
                     boundaryRectanglePoint.y - height / 2,
                     boundaryRectanglePoint.x + width / 2,
                     boundaryRectanglePoint.y + height / 2, height / 2, height / 2, boundaryRectanglePaint);
-            canvas.drawArc(boundaryRectanglePoint.x - width / 2 + arcIntermediateDistance,
-                    boundaryRectanglePoint.y - height / 2 + arcIntermediateDistance,
-                    boundaryRectanglePoint.x - width / 2 + height - arcIntermediateDistance,
-                    boundaryRectanglePoint.y + height / 2 - arcIntermediateDistance, 180, 90, false, boundaryRectanglePaint);
-            canvas.drawArc(boundaryRectanglePoint.x + width / 2 - height + arcIntermediateDistance,
-                    boundaryRectanglePoint.y - height / 2 + arcIntermediateDistance,
-                    boundaryRectanglePoint.x + width / 2 - arcIntermediateDistance,
-                    boundaryRectanglePoint.y + height / 2 - arcIntermediateDistance, 0, 90, false, boundaryRectanglePaint);
         }
     }
 
@@ -98,5 +101,7 @@ public class HorizontalSliderObject implements GameObject {
 
         offsetDistanceX = maxSolidOffset * currentDistanceX / maxDistanceX;
         offsetDistanceY = maxSolidOffset * currentDistanceY / maxDistanceY;
+
+        showSolidRectangle = ballCenter.y - Constants.SCREEN_WIDTH / 20 >= sliderY - height;
     }
 }
