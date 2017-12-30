@@ -79,6 +79,14 @@ public class StrikerObject implements GameObject {
         }
     }
 
+    public float getSpeedX() {
+        return speedX;
+    }
+
+    public float getSpeedY() {
+        return speedY;
+    }
+
     void setSpeed(float speedX, float speedY) {
         this.speedX = speedX;
         this.speedY = speedY;

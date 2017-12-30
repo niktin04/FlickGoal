@@ -87,9 +87,9 @@ public class PlaygameScene implements Scene {
         sliderTwo.update();
         sliderThree.update();
 
-        sliderOne.offsetSolidRectangle(ball.getPositionPoint());
-        sliderTwo.offsetSolidRectangle(ball.getPositionPoint());
-        sliderThree.offsetSolidRectangle(ball.getPositionPoint());
+        sliderOne.ballInteraction(ball);
+        sliderTwo.ballInteraction(ball);
+        sliderThree.ballInteraction(ball);
 
         ball.update();
     }
