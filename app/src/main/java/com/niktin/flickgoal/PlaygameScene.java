@@ -46,8 +46,8 @@ public class PlaygameScene implements Scene {
 
     @Override
     public void receiveFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-        int normalisedVelocityX = (int) (velocityX / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY);
-        int normalisedVelocityY = (int) (velocityY / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY);
+        float normalisedVelocityX = velocityX / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY;
+        float normalisedVelocityY = velocityY / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY;
 
         ball.setSpeed(normalisedVelocityX, normalisedVelocityY);
     }

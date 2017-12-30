@@ -15,7 +15,7 @@ public class StrikerObject implements GameObject {
     private int radius = Constants.SCREEN_WIDTH / 20;
     private Point centerPoint;
     private Paint ballPaint, highlightPaint, shadowPaint, boundaryPaint;
-    private int speedX = 0, speedY = 0;
+    private float speedX = 0, speedY = 0;
 
     StrikerObject(int centerPointX, int centerPointY) {
         centerPoint = new Point(centerPointX, centerPointY);
@@ -57,9 +57,16 @@ public class StrikerObject implements GameObject {
         speedX *= Constants.SURFACE_FRICTION_COEFFICIENT;
         speedY *= Constants.SURFACE_FRICTION_COEFFICIENT;
 
+        if (speedX < 1 && speedX > -1) {
+            speedX = 0;
+        }
+        if (speedY < 1 && speedY > -1) {
+            speedY = 0;
+        }
+
         System.out.println("Ball Speed: " + speedX + " " + speedY);
-        centerPoint.x += Math.floor(speedX);
-        centerPoint.y += Math.floor(speedY);
+        centerPoint.x += (int) speedX;
+        centerPoint.y += (int) speedY;
     }
 
     @Override
@@ -72,7 +79,7 @@ public class StrikerObject implements GameObject {
         }
     }
 
-    void setSpeed(int speedX, int speedY) {
+    void setSpeed(float speedX, float speedY) {
         this.speedX = speedX;
         this.speedY = speedY;
     }
