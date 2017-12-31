@@ -35,8 +35,6 @@ class NikTinHelperFunctions {
         return bitmap;
     }
 
-
-
     static int getRandomColor() {
         double randomNumber = Math.random();
         if (randomNumber < 0.25) {

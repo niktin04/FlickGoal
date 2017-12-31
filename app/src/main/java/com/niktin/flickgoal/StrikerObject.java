@@ -22,7 +22,8 @@ public class StrikerObject implements GameObject {
 
         ballPaint = new Paint();
         ballPaint.setAntiAlias(true);
-        ballPaint.setColor(Color.rgb(237, 94, 94));
+//        ballPaint.setColor(Color.rgb(237, 94, 94));
+        ballPaint.setColor(NikTinHelperFunctions.getRandomColor());
         ballPaint.setShadowLayer(2, 0, 0, Color.BLACK);
 
         highlightPaint = new Paint();
@@ -64,7 +65,6 @@ public class StrikerObject implements GameObject {
             speedY = 0;
         }
 
-        System.out.println("Ball Speed: " + speedX + " " + speedY);
         centerPoint.x += (int) speedX;
         centerPoint.y += (int) speedY;
     }

@@ -70,7 +70,7 @@ public class PlaygameScene implements Scene {
             float normalisedVelocityX = velocityX / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY;
             float normalisedVelocityY = velocityY / Constants.MAX_FLING_VELOCITY * Constants.NORMALISED_VELOCITY;
 
-            ball.setSpeed(normalisedVelocityX, normalisedVelocityY);
+            ball.setSpeed(ball.getSpeedX() + normalisedVelocityX, ball.getSpeedY() + normalisedVelocityY);
         }
 
         swipeTrailObject.clearTrailPoints();

@@ -24,37 +24,22 @@ public class SwipeTrailObject implements GameObject {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setColor(Color.GRAY);
+        paint.setColor(NikTinHelperFunctions.getRandomColor());
     }
 
     void touchEvents(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                trailPoints.add(new Point(event.getX(), event.getY()));
-            case MotionEvent.ACTION_MOVE:
-                // When the hardware tracks events faster than they are delivered,
-                // the event will contain a history of those skipped points.
-                int historySize = event.getHistorySize();
-                for (int i = 0; i < historySize; i++) {
-                    float historicalX = event.getHistoricalX(i);
-                    float historicalY = event.getHistoricalY(i);
-                    trailPoints.add(new Point(historicalX, historicalY));
-                }
-                // After replaying history, add point.
-                trailPoints.add(new Point(event.getX(), event.getY()));
+        if (event.getAction() != MotionEvent.ACTION_UP) {
+            // When the hardware tracks events faster than they are delivered,
+            // the event will contain a history of those skipped points.
+            int historySize = event.getHistorySize();
+            for (int i = 0; i < historySize; i++) {
+                float historicalX = event.getHistoricalX(i);
+                float historicalY = event.getHistoricalY(i);
+                trailPoints.add(new Point(historicalX, historicalY));
+            }
+            // After replaying history, add point.
+            trailPoints.add(new Point(event.getX(), event.getY()));
         }
-//        if (event.getAction() != MotionEvent.ACTION_UP) {
-//            // When the hardware tracks events faster than they are delivered,
-//            // the event will contain a history of those skipped points.
-//            int historySize = event.getHistorySize();
-//            for (int i = 0; i < historySize; i++) {
-//                float historicalX = event.getHistoricalX(i);
-//                float historicalY = event.getHistoricalY(i);
-//                trailPoints.add(new Point(historicalX, historicalY));
-//            }
-//            // After replaying history, add point.
-//            trailPoints.add(new Point(event.getX(), event.getY()));
-//        }
     }
 
     @Override
@@ -91,11 +76,11 @@ public class SwipeTrailObject implements GameObject {
                 Point point = trailPoints.get(i);
                 Point prev = trailPoints.get(i - 1);
                 float strokeWidth = MAX_TRAIL_WIDTH / pointsLength * i;
-                int strokeAlpha = 100 / pointsLength * i; // Alpha varies from 0 to 255
+//                int strokeAlpha = 255 / pointsLength * i; // Alpha varies from 0 to 255
 
                 Path path = new Path();
                 paint.setStrokeWidth(strokeWidth);
-                paint.setAlpha(strokeAlpha);
+//                paint.setAlpha(strokeAlpha);
                 path.moveTo(prev.x, prev.y);
                 path.cubicTo(prev.x + prev.dx, prev.y + prev.dy, point.x - point.dx, point.y - point.dy, point.x, point.y);
                 canvas.drawPath(path, paint);
@@ -104,7 +89,7 @@ public class SwipeTrailObject implements GameObject {
     }
 
     void clearTrailPoints() {
-        this.trailPoints.clear();
+        trailPoints.clear();
     }
 
     class Point {
