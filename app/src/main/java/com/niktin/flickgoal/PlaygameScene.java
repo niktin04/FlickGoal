@@ -18,11 +18,12 @@ public class PlaygameScene implements Scene {
     private static int HEIGHT_SEGMENTS = 8;
     private double[] positionX, positionY, isVisibleSelector;
     private Bitmap[] bitmaps;
+    private GoalKeeperObject goalKeeper;
     private HorizontalSliderObject sliderOne, sliderTwo, sliderThree;
     private StrikerObject ball;
     private SwipeTrailObject swipeTrailObject;
     private RectF ballTouchArea = new RectF();
-    Paint touchAreaPaint;
+    private Paint touchAreaPaint;
 
     PlaygameScene() {
         positionX = new double[WIDTH_SEGMENTS * HEIGHT_SEGMENTS];
@@ -37,6 +38,7 @@ public class PlaygameScene implements Scene {
             bitmaps[i] = NikTinHelperFunctions.getBitmapFromVectorDrawable(NikTinHelperFunctions.getRandomBackgroundParticle(), NikTinHelperFunctions.getRandomColor(), 16, 16);
         }
 
+        goalKeeper = new GoalKeeperObject(160);
         sliderOne = new HorizontalSliderObject(400, 400, 900, 700);
         sliderTwo = new HorizontalSliderObject(700, 40, 470, 280);
         sliderThree = new HorizontalSliderObject(900, 90, 990, 400);
@@ -90,7 +92,9 @@ public class PlaygameScene implements Scene {
         sliderOne.ballInteraction(ball);
         sliderTwo.ballInteraction(ball);
         sliderThree.ballInteraction(ball);
+        goalKeeper.ballInteraction(ball);
 
+        goalKeeper.update();
         ball.update();
     }
 
@@ -102,8 +106,9 @@ public class PlaygameScene implements Scene {
         sliderOne.draw(canvas);
         sliderTwo.draw(canvas);
         sliderThree.draw(canvas);
-        canvas.drawCircle(ball.getPositionPoint().x, ball.getPositionPoint().y, 160, touchAreaPaint);
+        goalKeeper.draw(canvas);
         ball.draw(canvas);
+        canvas.drawCircle(ball.getPositionPoint().x, ball.getPositionPoint().y, 160, touchAreaPaint);
     }
 
     @Override

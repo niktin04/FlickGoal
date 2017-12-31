@@ -19,7 +19,7 @@ public class HorizontalSliderObject implements GameObject {
     private int sliderY, sliderSpanStartX, sliderSpanFinishX;
     private int arcIntermediateDistance = 12;
     private Point boundaryRectanglePoint, solidRectanglePoint;
-    private int speed = 4;
+    private float speed = 4;
     private RectF solidRectangle, boundaryRectangle, leftArc, rightArc, ballInteraction;
     private Paint solidRectanglePaint, boundaryRectanglePaint, backgroundSlashPaint;
     private float offsetDistanceX, offsetDistanceY, maxSolidOffset = 11;
@@ -54,6 +54,13 @@ public class HorizontalSliderObject implements GameObject {
 
     @Override
     public void update() {
+        if (boundaryRectanglePoint.x + width / 2 > sliderSpanFinishX || boundaryRectanglePoint.x - width / 2 < sliderSpanStartX) {
+            speed *= -1;
+        }
+
+        boundaryRectanglePoint.x += speed;
+        solidRectanglePoint.x += speed;
+
         solidRectangle.set(solidRectanglePoint.x - width / 2 + offsetDistanceX,
                 solidRectanglePoint.y - height / 2 + offsetDistanceY,
                 solidRectanglePoint.x + width / 2 + offsetDistanceX,
@@ -70,13 +77,6 @@ public class HorizontalSliderObject implements GameObject {
                 boundaryRectanglePoint.y - height / 2 + arcIntermediateDistance,
                 boundaryRectanglePoint.x + width / 2 - arcIntermediateDistance,
                 boundaryRectanglePoint.y + height / 2 - arcIntermediateDistance);
-
-        if (boundaryRectanglePoint.x + width / 2 > sliderSpanFinishX || boundaryRectanglePoint.x - width / 2 < sliderSpanStartX) {
-            speed *= -1;
-        }
-
-        boundaryRectanglePoint.x += speed;
-        solidRectanglePoint.x += speed;
     }
 
     @Override
