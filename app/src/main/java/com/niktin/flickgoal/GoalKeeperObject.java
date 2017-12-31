@@ -15,14 +15,17 @@ public class GoalKeeperObject implements GameObject {
     private int height = Constants.SCREEN_WIDTH / 20;
     private int sliderY, sliderSpanStartX = 0, sliderSpanFinishX = Constants.SCREEN_WIDTH;
     private Point bodyRectanglePoint;
-    private float maxSpeed = 11, speed;
+    private float maxSpeed = 16, speed;
     private float maxDistance = width / 2;
     private RectF bodyRectangle, ballInteraction;
-    private Paint bodyRectanglePaint, eyePaint;
+    private Paint bodyRectanglePaint, eyePaint, eyeBallPaint;
+    private float leftEyeOffsetX = 7, rightEyeOffsetX = 7, eyeOffsetY = 7;
+    private float eyeMaxOffsetX = width + height, eyeMaxOffsetY;
     private boolean showSolidRectangle = true;
 
     GoalKeeperObject(int sliderY) {
         this.sliderY = sliderY;
+        this.eyeMaxOffsetY = Constants.SCREEN_HEIGHT - sliderY;
 
         bodyRectanglePoint = new Point(Constants.SCREEN_WIDTH / 2, sliderY);
 
@@ -32,6 +35,11 @@ public class GoalKeeperObject implements GameObject {
         eyePaint = new Paint();
         eyePaint.setAntiAlias(true);
         eyePaint.setColor(Color.WHITE);
+
+        eyeBallPaint = new Paint();
+        eyeBallPaint.setAntiAlias(true);
+        eyeBallPaint.setColor(Color.WHITE);
+        eyeBallPaint.setAlpha(40);
 
         bodyRectangle = new RectF();
         ballInteraction = new RectF();
@@ -52,13 +60,19 @@ public class GoalKeeperObject implements GameObject {
         canvas.drawRoundRect(bodyRectangle, height / 2, height / 2, bodyRectanglePaint);
         canvas.drawCircle(bodyRectanglePoint.x - width / 2 + height / 2, bodyRectanglePoint.y, height / 2 - 9, eyePaint);
         canvas.drawCircle(bodyRectanglePoint.x + width / 2 - height / 2, bodyRectanglePoint.y, height / 2 - 9, eyePaint);
-        canvas.drawCircle(bodyRectanglePoint.x - width / 2 + height / 2, bodyRectanglePoint.y, height / 2 - 16, bodyRectanglePaint);
-        canvas.drawCircle(bodyRectanglePoint.x + width / 2 - height / 2, bodyRectanglePoint.y, height / 2 - 16, bodyRectanglePaint);
+        canvas.drawCircle(bodyRectanglePoint.x - width / 2 + height / 2 + leftEyeOffsetX, bodyRectanglePoint.y + eyeOffsetY, height / 2 - 16, bodyRectanglePaint);
+        canvas.drawCircle(bodyRectanglePoint.x + width / 2 - height / 2 + rightEyeOffsetX, bodyRectanglePoint.y + eyeOffsetY, height / 2 - 16, bodyRectanglePaint);
+        canvas.drawCircle(bodyRectanglePoint.x - width / 2 + height / 2 + leftEyeOffsetX, bodyRectanglePoint.y + eyeOffsetY, 7, eyeBallPaint);
+        canvas.drawCircle(bodyRectanglePoint.x + width / 2 - height / 2 + rightEyeOffsetX, bodyRectanglePoint.y + eyeOffsetY, 7, eyeBallPaint);
     }
 
     void ballInteraction(StrikerObject ball) {
         float ballX = ball.getPositionPoint().x;
         float ballY = ball.getPositionPoint().y;
+
+        leftEyeOffsetX = 7 * (ballX - (bodyRectanglePoint.x - width / 2 + height / 2)) / eyeMaxOffsetX;
+        rightEyeOffsetX = 7 * (ballX - (bodyRectanglePoint.x + width / 2 - height / 2)) / eyeMaxOffsetX;
+        eyeOffsetY = 7 * (ballY - bodyRectanglePoint.y) / eyeMaxOffsetY + 2;
 
         if (bodyRectanglePoint.x + width / 2 < sliderSpanFinishX && bodyRectanglePoint.x - width / 2 > sliderSpanStartX) {
             if (ballX > bodyRectanglePoint.x - width / 2 && ballX < bodyRectanglePoint.x + width / 2) {
@@ -88,7 +102,7 @@ public class GoalKeeperObject implements GameObject {
 
         ballInteraction.set(bodyRectangle);
         ballInteraction.inset(-1 * Constants.SCREEN_WIDTH / 20, -1 * Constants.SCREEN_WIDTH / 20);
-        if (ballInteraction.contains(ball.getPositionPoint().x, ball.getPositionPoint().y)) {
+        if (ballInteraction.contains(ballX, ballY)) {
             ball.setSpeed(ball.getSpeedX() + speed, ball.getSpeedY() * -1 + 16);
         }
     }
