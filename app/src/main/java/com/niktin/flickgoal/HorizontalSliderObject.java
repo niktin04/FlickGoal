@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.os.Build;
 
 /**
  * Created by NikTin on 30/12/17 at 16:09.
@@ -101,7 +100,7 @@ public class HorizontalSliderObject implements GameObject {
         }
     }
 
-    void ballInteraction(StrikerObject ball) {
+    void ballInteraction(BallObject ball) {
         if (showSolidRectangle) {
             showSolidRectangle = ball.getPositionPoint().y - Constants.SCREEN_WIDTH / 20 >= sliderY - height;
         } else {

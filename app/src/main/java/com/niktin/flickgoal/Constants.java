@@ -2,6 +2,7 @@ package com.niktin.flickgoal;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.ViewConfiguration;
 
 /**
@@ -22,6 +23,8 @@ class Constants {
 
     static float NORMALISED_VELOCITY = 160;
     static float MAX_FLING_VELOCITY;
+
+    static Typeface phosphateSolidFont;
 
     static boolean GAME_OVER = false;
 }

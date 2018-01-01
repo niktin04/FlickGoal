@@ -21,7 +21,6 @@ public class GoalKeeperObject implements GameObject {
     private Paint bodyRectanglePaint, eyePaint, eyeBallPaint;
     private float leftEyeOffsetX = 7, rightEyeOffsetX = 7, eyeOffsetY = 7;
     private float eyeMaxOffsetX = width + height, eyeMaxOffsetY;
-    private boolean showSolidRectangle = true;
 
     GoalKeeperObject(int sliderY) {
         this.sliderY = sliderY;
@@ -66,7 +65,7 @@ public class GoalKeeperObject implements GameObject {
         canvas.drawCircle(bodyRectanglePoint.x + width / 2 - height / 2 + rightEyeOffsetX, bodyRectanglePoint.y + eyeOffsetY, 7, eyeBallPaint);
     }
 
-    void ballInteraction(StrikerObject ball) {
+    void ballInteraction(BallObject ball) {
         float ballX = ball.getPositionPoint().x;
         float ballY = ball.getPositionPoint().y;
 

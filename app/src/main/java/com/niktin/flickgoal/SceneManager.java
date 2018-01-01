@@ -16,6 +16,7 @@ class SceneManager {
 
     SceneManager() {
         ACTIVE_SCENE = 0;
+        scenes.add(new WelcomeScene());
         scenes.add(new PlaygameScene());
     }
 

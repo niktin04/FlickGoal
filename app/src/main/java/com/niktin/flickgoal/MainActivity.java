@@ -1,6 +1,7 @@
 package com.niktin.flickgoal;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -33,6 +34,8 @@ public class MainActivity extends Activity {
 
         //Allowing music control from volume buttons.
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        Constants.phosphateSolidFont = Typeface.createFromAsset(getAssets(), "fonts/phosphatesolid.ttf");
 
         //Setting GamePanel class as my view.
         gamePanel = new GamePanel(this);

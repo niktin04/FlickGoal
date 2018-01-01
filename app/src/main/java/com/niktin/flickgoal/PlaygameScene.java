@@ -20,7 +20,7 @@ public class PlaygameScene implements Scene {
     private Bitmap[] bitmaps;
     private GoalKeeperObject goalKeeper;
     private HorizontalSliderObject sliderOne, sliderTwo, sliderThree;
-    private StrikerObject ball;
+    private BallObject ball;
     private SwipeTrailObject swipeTrailObject;
     private RectF ballTouchArea = new RectF();
     private Paint touchAreaPaint;
@@ -42,7 +42,7 @@ public class PlaygameScene implements Scene {
         sliderOne = new HorizontalSliderObject(400, 400, 900, 700);
         sliderTwo = new HorizontalSliderObject(700, 40, 470, 280);
         sliderThree = new HorizontalSliderObject(900, 90, 990, 400);
-        ball = new StrikerObject(Constants.SCREEN_WIDTH / 2, 1700);
+        ball = new BallObject(Constants.SCREEN_WIDTH / 2, 1700);
         swipeTrailObject = new SwipeTrailObject();
 
         touchAreaPaint = new Paint();
