@@ -1,10 +1,10 @@
 package com.niktin.flickgoal;
 
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.SoundPool;
 import android.view.MotionEvent;
@@ -19,7 +19,11 @@ public class WelcomeScene implements Scene {
     private static int HEIGHT_SEGMENTS = 8;
     private double[] positionX, positionY, isVisibleSelector;
     private Bitmap[] bitmaps;
-    Paint logoSolidPaint;
+    Paint logoSolidPaint, subtitlePaint, backgroundPaint;
+    private Rect r = new Rect();
+    private boolean fadeLogoIn = true;
+    private int counter = 0;
+    private Rect settingsIcon = new Rect(20, 20, 160, 160);
 
     WelcomeScene() {
         positionX = new double[WIDTH_SEGMENTS * HEIGHT_SEGMENTS];
@@ -34,11 +38,18 @@ public class WelcomeScene implements Scene {
             bitmaps[i] = NikTinHelperFunctions.getBitmapFromVectorDrawable(NikTinHelperFunctions.getRandomBackgroundParticle(), NikTinHelperFunctions.getRandomColor(), 16, 16);
         }
 
-        logoSolidPaint = new Paint();
+        logoSolidPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         logoSolidPaint.setTypeface(Constants.phosphateSolidFont);
-        logoSolidPaint.setColor(Color.rgb(254, 167, 87));
-        logoSolidPaint.setTextSize(70);
+        logoSolidPaint.setShadowLayer(4, 0, 0, Color.BLACK);
+        logoSolidPaint.setTextSize(110);
 
+        subtitlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        subtitlePaint.setColor(Color.rgb(241, 91, 92));
+        subtitlePaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        subtitlePaint.setTextSize(28);
+
+        backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.WHITE);
     }
 
     @Override
@@ -66,13 +77,22 @@ public class WelcomeScene implements Scene {
         canvas.drawColor(Color.WHITE);
         generateBackground(canvas);
 
-        canvas.drawLine(Constants.SCREEN_WIDTH / 2, 0, Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT, new Paint());
-        canvas.drawLine(0, Constants.SCREEN_HEIGHT/2, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT/2, new Paint());
+        while (fadeLogoIn) {
+            if (counter == 255) {
+                fadeLogoIn = false;
+            }
+            logoSolidPaint.setAlpha(counter);
+            counter++;
+        }
 
-        int xPos = canvas.getWidth() / 2;
-        int yPos = (int) (canvas.getHeight() / 2 - ((logoSolidPaint.descent() + logoSolidPaint.ascent()) / 2));
+        canvas.drawRect(0, Constants.SCREEN_HEIGHT / 2 - 160, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 2 + 160, backgroundPaint);
+        drawCenterText(canvas, logoSolidPaint, "FLICKGOAL", 0);
+        drawCenterText(canvas, subtitlePaint, "TEST YOUR FOOTBALL FRIENDLY FINGERS", 70);
 
-        canvas.drawText("FLICKGOAL", xPos, yPos, logoSolidPaint);
+        if (!fadeLogoIn) {
+            canvas.drawRect(settingsIcon, new Paint());
+            canvas.drawBitmap(NikTinHelperFunctions.getBitmapFromVectorDrawable(R.drawable.ic_settings_black_24dp, Color.GRAY, settingsIcon.width(), settingsIcon.height()), settingsIcon.left + 20, settingsIcon.top + 20, new Paint());
+        }
     }
 
     @Override
@@ -94,5 +114,16 @@ public class WelcomeScene implements Scene {
                 }
             }
         }
+    }
+
+    private void drawCenterText(Canvas canvas, Paint paint, String text, int offsetY) {
+        canvas.getClipBounds(r);
+        int cHeight = r.height();
+        int cWidth = r.width();
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.getTextBounds(text, 0, text.length(), r);
+        float x = cWidth / 2f - r.width() / 2f - r.left;
+        float y = cHeight / 2f + r.height() / 2f - r.bottom + offsetY;
+        canvas.drawText(text, x, y, paint);
     }
 }

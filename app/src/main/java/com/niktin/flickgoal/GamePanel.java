@@ -87,7 +87,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2,
                                float velocityX, float velocityY) {
-            System.out.println("Received Fling: " + event2);
             sceneManager.receiveFling(event1, event2, velocityX, velocityY);
             return true;
         }
