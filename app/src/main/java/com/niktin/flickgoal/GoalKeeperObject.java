@@ -103,6 +103,7 @@ public class GoalKeeperObject implements GameObject {
         ballInteraction.inset(-1 * Constants.SCREEN_WIDTH / 20, -1 * Constants.SCREEN_WIDTH / 20);
         if (ballInteraction.contains(ballX, ballY)) {
             ball.setSpeed(ball.getSpeedX() + speed, ball.getSpeedY() * -1 + 16);
+            RulesAndScoring.hopGoalkeeper += 1;
         }
     }
 }

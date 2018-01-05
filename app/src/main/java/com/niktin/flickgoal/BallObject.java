@@ -13,24 +13,22 @@ import android.os.Build;
 public class BallObject implements GameObject {
 
     private int radius = Constants.SCREEN_WIDTH / 20;
-    private Point centerPoint;
+    private Point centerPoint = new Point(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 160);
     private Paint ballPaint, highlightPaint, shadowPaint, boundaryPaint;
     private float speedX = 0, speedY = 0;
     private boolean takingIn = false, throwingOut = false;
+    private int outsideWall = Constants.SCREEN_WIDTH / 28;
 
-    BallObject(int centerPointX, int centerPointY) {
-        centerPoint = new Point(centerPointX, centerPointY);
-
+    BallObject() {
         ballPaint = new Paint();
         ballPaint.setAntiAlias(true);
-//        ballPaint.setColor(Color.rgb(237, 94, 94));
         ballPaint.setColor(NikTinHelperFunctions.getRandomColor());
         ballPaint.setShadowLayer(2, 0, 0, Color.BLACK);
 
         highlightPaint = new Paint();
         highlightPaint.setAntiAlias(true);
         highlightPaint.setColor(Color.WHITE);
-        highlightPaint.setAlpha(28);
+        highlightPaint.setAlpha(40);
 
         shadowPaint = new Paint();
         shadowPaint.setAntiAlias(true);
@@ -49,14 +47,17 @@ public class BallObject implements GameObject {
 
     @Override
     public void update() {
-        if (centerPoint.x + radius + speedX > Constants.SCREEN_WIDTH || centerPoint.x - radius + speedX < 0) {
+        if (centerPoint.x + radius + speedX > Constants.SCREEN_WIDTH - outsideWall || centerPoint.x - radius + speedX < outsideWall) {
             ballOutside();
         } else {
             takingIn = true;
         }
 
-        if (centerPoint.y + radius + speedY > Constants.SCREEN_HEIGHT || centerPoint.y - radius + speedY < 0) {
+        if (centerPoint.y + radius + speedY > Constants.SCREEN_HEIGHT) {
             speedY *= -1;
+        } else if (centerPoint.y - radius + speedY < 0) {
+            ballReset();
+            RulesAndScoring.goals += 1;
         }
 
         speedX *= Constants.SURFACE_FRICTION_COEFFICIENT;
@@ -83,6 +84,13 @@ public class BallObject implements GameObject {
         }
     }
 
+    private void ballReset() {
+        centerPoint.x = Constants.SCREEN_WIDTH / 2;
+        centerPoint.y = Constants.SCREEN_HEIGHT - 160;
+        speedX = 0;
+        speedY = 0;
+    }
+
     private void ballOutside() {
         if (takingIn) {
             speedY = 0;
@@ -97,6 +105,7 @@ public class BallObject implements GameObject {
             speedX = -1 * Math.signum(speedX) * (16 + 16 * (float) Math.random());
             speedY = 16 * 2 * ((float) Math.random() - 0.5f);
             throwingOut = false;
+            RulesAndScoring.outsides += 1;
         }
     }
 

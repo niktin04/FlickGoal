@@ -14,8 +14,8 @@ import android.view.MotionEvent;
 
 public class PlaygameScene implements Scene {
 
-    private static int WIDTH_SEGMENTS = 4;
-    private static int HEIGHT_SEGMENTS = 8;
+    private int WIDTH_SEGMENTS = 4;
+    private int HEIGHT_SEGMENTS = 8;
     private double[] positionX, positionY, isVisibleSelector;
     private Bitmap[] bitmaps;
     private GoalKeeperObject goalKeeper;
@@ -23,9 +23,10 @@ public class PlaygameScene implements Scene {
     private BallObject ball;
     private SwipeTrailObject swipeTrailObject;
     private RectF ballTouchArea = new RectF();
-    private Paint touchAreaPaint, sideBoundaryPaint;
+    private Paint touchAreaPaint, sideBoundaryPaint, scorePaint;
     private boolean firstRun = true;
     private SoundPool soundPool;
+    private int outsideWall = Constants.SCREEN_WIDTH / 28;
 
     PlaygameScene() {
         positionX = new double[WIDTH_SEGMENTS * HEIGHT_SEGMENTS];
@@ -44,7 +45,7 @@ public class PlaygameScene implements Scene {
         sliderOne = new HorizontalSliderObject(400, 400, 900, 700);
         sliderTwo = new HorizontalSliderObject(700, 40, 470, 280);
         sliderThree = new HorizontalSliderObject(900, 90, 990, 400);
-        ball = new BallObject(Constants.SCREEN_WIDTH / 2, 1700);
+        ball = new BallObject();
         swipeTrailObject = new SwipeTrailObject();
 
         touchAreaPaint = new Paint();
@@ -55,8 +56,12 @@ public class PlaygameScene implements Scene {
         touchAreaPaint.setAlpha(40);
 
         sideBoundaryPaint = new Paint();
-        sideBoundaryPaint.setAlpha(28);
+        sideBoundaryPaint.setColor(NikTinHelperFunctions.getRandomColor());
+        sideBoundaryPaint.setAlpha(40);
         sideBoundaryPaint.setStrokeWidth(2);
+
+        scorePaint = new Paint();
+        scorePaint.setTextSize(40);
     }
 
     @Override
@@ -138,10 +143,16 @@ public class PlaygameScene implements Scene {
         ball.draw(canvas);
         canvas.drawCircle(ball.getPositionPoint().x, ball.getPositionPoint().y, 160, touchAreaPaint);
 
-//        canvas.drawRect(0, 0, 40, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
-//        canvas.drawRect(Constants.SCREEN_WIDTH - 40, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
-//        canvas.drawLine(40, 0, 40, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
-//        canvas.drawLine(Constants.SCREEN_WIDTH - 40, 0, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+        canvas.drawRect(0, 0, outsideWall, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+        canvas.drawRect(Constants.SCREEN_WIDTH - outsideWall, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+        canvas.drawLine(outsideWall, 0, outsideWall, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+        canvas.drawLine(Constants.SCREEN_WIDTH - outsideWall, 0, Constants.SCREEN_WIDTH - outsideWall, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+
+        canvas.drawText(String.valueOf(RulesAndScoring.goals), 40, 40, scorePaint);
+        canvas.drawText(String.valueOf(RulesAndScoring.hopGoalkeeper), 40, 80, scorePaint);
+        canvas.drawText(String.valueOf(RulesAndScoring.hopObstacles), 40, 120, scorePaint);
+        canvas.drawText(String.valueOf((System.currentTimeMillis() - RulesAndScoring.initTime) / 1000), 40, 160, scorePaint);
+        canvas.drawText(String.valueOf(RulesAndScoring.outsides), 40, 200, scorePaint);
     }
 
     @Override

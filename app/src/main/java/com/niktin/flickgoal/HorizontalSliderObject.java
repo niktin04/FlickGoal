@@ -121,6 +121,7 @@ public class HorizontalSliderObject implements GameObject {
             ballInteraction.inset(-1 * Constants.SCREEN_WIDTH / 20, -1 * Constants.SCREEN_WIDTH / 20);
             if (ballInteraction.contains(ball.getPositionPoint().x, ball.getPositionPoint().y)) {
                 ball.setSpeed(ball.getSpeedX() + speed, ball.getSpeedY() * -1 + 9);
+                RulesAndScoring.hopObstacles += 1;
             }
         }
     }
