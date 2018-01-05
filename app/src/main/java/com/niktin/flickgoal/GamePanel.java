@@ -41,6 +41,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
         }
+        Constants.soundIDs[0] = soundPool.load(context, R.raw.kick, 1);
         sceneManager.receiveSoundPool(soundPool);
         setFocusable(true);
     }

@@ -12,10 +12,9 @@ import java.util.ArrayList;
 
 class SceneManager {
     private ArrayList<Scene> scenes = new ArrayList<>();
-    static int ACTIVE_SCENE;
+    static int ACTIVE_SCENE = 0;
 
     SceneManager() {
-        ACTIVE_SCENE = 0;
         scenes.add(new WelcomeScene());
         scenes.add(new PlaygameScene());
     }

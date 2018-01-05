@@ -23,7 +23,9 @@ public class PlaygameScene implements Scene {
     private BallObject ball;
     private SwipeTrailObject swipeTrailObject;
     private RectF ballTouchArea = new RectF();
-    private Paint touchAreaPaint;
+    private Paint touchAreaPaint, sideBoundaryPaint;
+    private boolean firstRun = true;
+    private SoundPool soundPool;
 
     PlaygameScene() {
         positionX = new double[WIDTH_SEGMENTS * HEIGHT_SEGMENTS];
@@ -51,12 +53,26 @@ public class PlaygameScene implements Scene {
         touchAreaPaint.setStrokeWidth(4);
         touchAreaPaint.setColor(Color.GRAY);
         touchAreaPaint.setAlpha(40);
+
+        sideBoundaryPaint = new Paint();
+        sideBoundaryPaint.setAlpha(28);
+        sideBoundaryPaint.setStrokeWidth(2);
+    }
+
+    @Override
+    public void receiveSoundPool(SoundPool soundPool) {
+        this.soundPool = soundPool;
     }
 
     @Override
     public void receiveTouch(MotionEvent event) {
         swipeTrailObject.touchEvents(event);
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (!Constants.IS_PLAYING) {
+                Constants.IS_PLAYING = true;
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             swipeTrailObject.clearTrailPoints();
         }
     }
@@ -79,29 +95,41 @@ public class PlaygameScene implements Scene {
     }
 
     @Override
-    public void receiveSoundPool(SoundPool soundPool) {
-
-    }
-
-    @Override
     public void update() {
-        sliderOne.update();
-        sliderTwo.update();
-        sliderThree.update();
+        if (firstRun) {
+            sliderOne.update();
+            sliderTwo.update();
+            sliderThree.update();
 
-        sliderOne.ballInteraction(ball);
-        sliderTwo.ballInteraction(ball);
-        sliderThree.ballInteraction(ball);
-        goalKeeper.ballInteraction(ball);
+            sliderOne.ballInteraction(ball);
+            sliderTwo.ballInteraction(ball);
+            sliderThree.ballInteraction(ball);
+            goalKeeper.ballInteraction(ball);
 
-        goalKeeper.update();
-        ball.update();
+            goalKeeper.update();
+            ball.update();
+            firstRun = false;
+        }
+        if (Constants.IS_PLAYING) {
+            sliderOne.update();
+            sliderTwo.update();
+            sliderThree.update();
+
+            sliderOne.ballInteraction(ball);
+            sliderTwo.ballInteraction(ball);
+            sliderThree.ballInteraction(ball);
+            goalKeeper.ballInteraction(ball);
+
+            goalKeeper.update();
+            ball.update();
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
         generateBackground(canvas);
+
         swipeTrailObject.draw(canvas);
         sliderOne.draw(canvas);
         sliderTwo.draw(canvas);
@@ -109,6 +137,11 @@ public class PlaygameScene implements Scene {
         goalKeeper.draw(canvas);
         ball.draw(canvas);
         canvas.drawCircle(ball.getPositionPoint().x, ball.getPositionPoint().y, 160, touchAreaPaint);
+
+//        canvas.drawRect(0, 0, 40, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+//        canvas.drawRect(Constants.SCREEN_WIDTH - 40, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+//        canvas.drawLine(40, 0, 40, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
+//        canvas.drawLine(Constants.SCREEN_WIDTH - 40, 0, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT, sideBoundaryPaint);
     }
 
     @Override

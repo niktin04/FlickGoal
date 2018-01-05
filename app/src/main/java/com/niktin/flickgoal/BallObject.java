@@ -48,8 +48,9 @@ public class BallObject implements GameObject {
 
     @Override
     public void update() {
-        if (centerPoint.x + radius + speedX > Constants.SCREEN_WIDTH || centerPoint.x - radius + speedX < 0) {
-            speedX *= -1;
+        if (centerPoint.x - radius + speedX > Constants.SCREEN_WIDTH || centerPoint.x + radius + speedX < 0) {
+//            speedX *= -1;
+            throwBallIn();
         }
         if (centerPoint.y + radius + speedY > Constants.SCREEN_HEIGHT || centerPoint.y - radius + speedY < 0) {
             speedY *= -1;
@@ -79,11 +80,17 @@ public class BallObject implements GameObject {
         }
     }
 
-    public float getSpeedX() {
+    private void throwBallIn() {
+        centerPoint.x = centerPoint.x / Math.abs(centerPoint.x) * radius;
+        speedX *= speedX / Math.abs(speedX) * (-1 * Math.random() * 10 + 10);
+        speedY = 0;
+    }
+
+    float getSpeedX() {
         return speedX;
     }
 
-    public float getSpeedY() {
+    float getSpeedY() {
         return speedY;
     }
 

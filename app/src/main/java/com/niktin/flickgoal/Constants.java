@@ -26,5 +26,8 @@ class Constants {
 
     static Typeface phosphateSolidFont;
 
-    static boolean GAME_OVER = false;
+    static boolean IS_PLAYING = false;
+    static boolean IS_FIRST_TIME = true;
+
+    static int soundIDs[] = new int[10];
 }
