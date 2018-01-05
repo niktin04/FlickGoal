@@ -16,6 +16,7 @@ public class BallObject implements GameObject {
     private Point centerPoint;
     private Paint ballPaint, highlightPaint, shadowPaint, boundaryPaint;
     private float speedX = 0, speedY = 0;
+    private boolean takingIn = false, throwingOut = false;
 
     BallObject(int centerPointX, int centerPointY) {
         centerPoint = new Point(centerPointX, centerPointY);
@@ -48,10 +49,12 @@ public class BallObject implements GameObject {
 
     @Override
     public void update() {
-        if (centerPoint.x - radius + speedX > Constants.SCREEN_WIDTH || centerPoint.x + radius + speedX < 0) {
-//            speedX *= -1;
-            throwBallIn();
+        if (centerPoint.x + radius + speedX > Constants.SCREEN_WIDTH || centerPoint.x - radius + speedX < 0) {
+            ballOutside();
+        } else {
+            takingIn = true;
         }
+
         if (centerPoint.y + radius + speedY > Constants.SCREEN_HEIGHT || centerPoint.y - radius + speedY < 0) {
             speedY *= -1;
         }
@@ -80,10 +83,21 @@ public class BallObject implements GameObject {
         }
     }
 
-    private void throwBallIn() {
-        centerPoint.x = centerPoint.x / Math.abs(centerPoint.x) * radius;
-        speedX *= speedX / Math.abs(speedX) * (-1 * Math.random() * 10 + 10);
-        speedY = 0;
+    private void ballOutside() {
+        if (takingIn) {
+            speedY = 0;
+            speedX = Math.signum(speedX) * 9;
+            if (centerPoint.x + radius <= 0 || centerPoint.x - radius >= Constants.SCREEN_WIDTH) {
+                takingIn = false;
+                throwingOut = true;
+            }
+        }
+
+        if (throwingOut) {
+            speedX = -1 * Math.signum(speedX) * (16 + 16 * (float) Math.random());
+            speedY = 16 * 2 * ((float) Math.random() - 0.5f);
+            throwingOut = false;
+        }
     }
 
     float getSpeedX() {
