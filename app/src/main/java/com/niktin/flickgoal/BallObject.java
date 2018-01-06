@@ -84,7 +84,7 @@ public class BallObject implements GameObject {
         }
     }
 
-    private void ballReset() {
+    void ballReset() {
         centerPoint.x = Constants.SCREEN_WIDTH / 2;
         centerPoint.y = Constants.SCREEN_HEIGHT - 160;
         speedX = 0;

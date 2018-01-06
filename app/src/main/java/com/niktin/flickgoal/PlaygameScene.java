@@ -27,6 +27,7 @@ public class PlaygameScene implements Scene {
     private boolean firstRun = true;
     private SoundPool soundPool;
     private int outsideWall = Constants.SCREEN_WIDTH / 28;
+    private int timeRemaining;
 
     PlaygameScene() {
         positionX = new double[WIDTH_SEGMENTS * HEIGHT_SEGMENTS];
@@ -74,8 +75,19 @@ public class PlaygameScene implements Scene {
         swipeTrailObject.touchEvents(event);
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (!Constants.IS_PLAYING) {
-                Constants.IS_PLAYING = true;
+            if (Constants.IS_FIRST_TIME) {
+                if (!Constants.IS_PLAYING) {
+                    RulesAndScoring.initTime = System.currentTimeMillis();
+                    Constants.IS_PLAYING = true;
+                    Constants.IS_FIRST_TIME = false;
+                }
+            } else {
+                if (!Constants.IS_PLAYING) {
+                    Constants.IS_PLAYING = true;
+                    Constants.IS_FIRST_TIME = true;
+                    RulesAndScoring.resetScore();
+                    ball.ballReset();
+                }
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             swipeTrailObject.clearTrailPoints();
@@ -127,6 +139,10 @@ public class PlaygameScene implements Scene {
 
             goalKeeper.update();
             ball.update();
+            timeRemaining = (int) (30 - ((System.currentTimeMillis() - RulesAndScoring.initTime) / 1000));
+            if (timeRemaining <= 0) {
+                Constants.IS_PLAYING = false;
+            }
         }
     }
 
@@ -151,8 +167,8 @@ public class PlaygameScene implements Scene {
         canvas.drawText(String.valueOf(RulesAndScoring.goals), 40, 40, scorePaint);
         canvas.drawText(String.valueOf(RulesAndScoring.hopGoalkeeper), 40, 80, scorePaint);
         canvas.drawText(String.valueOf(RulesAndScoring.hopObstacles), 40, 120, scorePaint);
-        canvas.drawText(String.valueOf((System.currentTimeMillis() - RulesAndScoring.initTime) / 1000), 40, 160, scorePaint);
-        canvas.drawText(String.valueOf(RulesAndScoring.outsides), 40, 200, scorePaint);
+        canvas.drawText(String.valueOf(RulesAndScoring.outsides), 40, 160, scorePaint);
+        canvas.drawText(String.valueOf(timeRemaining), 40, 200, scorePaint);
     }
 
     @Override
